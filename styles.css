@@ -1,0 +1,118 @@
+/* General Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #0a0a0a;
+    color: #d4edda;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3 {
+    color: #00ff7f;
+}
+
+a {
+    text-decoration: none;
+    color: #00ff7f;
+}
+
+a:hover {
+    color: #008f11;
+}
+
+/* Navigation */
+header {
+    background-color: #008f11;
+    padding: 15px 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Sections */
+section {
+    padding: 50px;
+    text-align: center;
+}
+
+.section-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+/* Profile Section */
+#profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.section__pic-container img {
+    width: 250px;
+    border-radius: 50%;
+}
+
+/* Projects */
+.project {
+    background-color: #121212;
+    padding: 20px;
+    margin: 20px auto;
+    width: 80%;
+    border-radius: 10px;
+    border: 1px solid #00ff7f;
+}
+
+/* Contact Form */
+form input, form textarea, form button {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+form input, form textarea {
+    background-color: #222;
+    color: #d4edda;
+}
+
+form button {
+    background-color: #00ff7f;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #008f11;
+}
+
+/* Footer */
+footer {
+    background-color: #008f11;
+    padding: 15px;
+    text-align: center;
+    margin-top: 50px;
+    color: #fff;
+}
