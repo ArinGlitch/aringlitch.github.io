@@ -1,123 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aaryan Gupta - Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="mediaqueries.css">
-    <script defer src="app.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aaryan Gupta</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <header>
-        <nav id="desktop-nav">
-            <div class="logo">Aaryan Gupta</div>
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-        <nav id="hamburger-nav">
-            <div class="logo">Aaryan Gupta</div>
-            <div class="hamburger-menu">
-                <div class="hamburger-icon" onclick="toggleMenu()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="menu-links">
-                    <li><a href="#about" onclick="toggleMenu()">About</a></li>
-                    <li><a href="#skills" onclick="toggleMenu()">Skills</a></li>
-                    <li><a href="#projects" onclick="toggleMenu()">Projects</a></li>
-                    <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    
-    <section id="profile">
-        <div class="section__pic-container">
-            <img src="./assets/profile-pic.jpg" alt="Aaryan Gupta profile picture">
-        </div>
-        <div class="section__text">
-            <p class="section__text__p1">Hello, I'm</p>
-            <h1 class="title">Aaryan Gupta</h1>
-            <p class="section__text__p2">Aspiring Entrepreneur | Tech Enthusiast</p>
-            <div class="btn-container">
-                <button class="btn btn-color-2" onclick="window.open('./assets/resume.pdf')">Download CV</button>
-                <button class="btn btn-color-1" onclick="location.href='#contact'">Contact Info</button>
-            </div>
-            <div id="socials-container">
-                <img src="./assets/linkedin.png" alt="LinkedIn" class="icon" onclick="location.href='https://www.linkedin.com/in/aaryangupta/'">
-                <img src="./assets/github.png" alt="GitHub" class="icon" onclick="location.href='https://github.com/aaryangupta'">
-            </div>
-        </div>
-    </section>
-    
-    <section id="about">
-        <p class="section__text__p1">Get to Know More</p>
-        <h1 class="title">About Me</h1>
-        <div class="section-container">
-            <div class="section__pic-container">
-                <img src="./assets/about-me.jpg" alt="Profile picture" class="about-pic"/>
-            </div>
-            <div class="about-details-container">
-                <div class="about-containers">
-                    <div class="details-container">
-                        <img src="./assets/experience.png" alt="Experience" class="icon"/>
-                        <h3>Experience</h3>
-                        <p>2+ Years of Development Experience</p> 
-                    </div>
-                    <div class="details-container">
-                        <img src="./assets/education.png" alt="Education" class="icon"/>
-                        <h3>Education</h3>
-                        <p>2nd Year Computer Science @ UofT</p> 
-                    </div>
-                </div>
-                <div class="text-container">
-                    <p>I'm Aaryan, an aspiring entrepreneur passionate about technology, cybersecurity, and robotics. I love solving problems and developing innovative projects that merge business and technology. My dream is to lead a tech company that drives meaningful change. In my free time, I enjoy gym workouts, chess, and exploring futuristic tech ideas.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <section id="skills">
-        <h2>Skills</h2>
-        <ul>
-            <li>Cybersecurity</li>
-            <li>Robotics</li>
-            <li>Full-stack Development</li>
-            <li>Business Strategy</li>
-            <li>Marketing</li>
-        </ul>
-    </section>
-    
-    <section id="projects">
-        <h2>Projects</h2>
-        <div class="project">
-            <h3>Othello AI</h3>
-            <p>Developed an AI for the Othello board game using greedy algorithms.</p>
-        </div>
-        <div class="project">
-            <h3>Mindfulness AI Mirror</h3>
-            <p>AI-powered smart mirror to enhance mindfulness and productivity.</p>
-        </div>
-    </section>
-    
-    <section id="contact">
-        <h2>Contact</h2>
-        <form id="contactForm">
-            <input type="text" id="name" placeholder="Your Name" required>
-            <input type="email" id="email" placeholder="Your Email" required>
-            <textarea id="message" placeholder="Your Message" required></textarea>
-            <button type="submit">Send</button>
-        </form>
-    </section>
-    
-    <footer>
-        <p>&copy; 2025 Aaryan Gupta. All Rights Reserved.</p>
-    </footer>
+  <header class="navbar">
+    <div class="logo">Aaryan Gupta</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Hello, I'm <span class="highlight">Aaryan</span></h1>
+      <p>Aspiring Tech Entrepreneur | Developer | Visionary</p>
+      <p></p>
+      <p></p>
+      <a href="#projects" class="btn">View My Work</a>
+    </div>
+  </section>
+
+  <section id="about" class="section">
+    <h2>About Me</h2>
+    <p>I am a passionate computer science student aiming to revolutionize tech. With a love for innovation and sleek design, I build impactful software that stands out.</p>
+  </section>
+
+  <section id="skills" class="section">
+    <h2>Skills</h2>
+    <div class="skills-list">
+      <div class="skill-item">HTML5 / CSS3 / JavaScript</div>
+      <div class="skill-item">Python / C / RISC-V</div>
+      <div class="skill-item">React / Node.js</div>
+      <div class="skill-item">Cybersecurity Fundamentals</div>
+      <div class="skill-item">Robotics / Arduino Prototyping</div>
+      <div class="skill-item">Business Strategy / Marketing</div>
+      <div class="skill-item">Communication / Team Collaboration</div>
+    </div>
+  </section>
+
+  <section id="projects" class="section">
+    <h2>Projects</h2>
+    <div class="project-list">
+      <div class="project-card">
+        <h3>Smart Mirror</h3>
+        <p>An AI-enhanced mindfulness mirror designed to improve mental wellness.</p>
+      </div>
+      <div class="project-card">
+        <h3>OLED Shoes</h3>
+        <p>Customizable fashion-tech shoes with OLED displays and app control.</p>
+      </div>
+      <div class="project-card">
+        <h3><a href="iot-plant-monitor.html" style="color: #1aff1a; text-decoration: none;">IoT Based Plant Monitoring System</a></h3>
+        <p>A smart system that monitors your plant’s needs using IoT sensors and real-time data.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <h2>Contact Me</h2>
+    <div class="contact-buttons">
+      <a href="mailto:aaryan.gupta@mail.utoronto.ca" class="contact-btn" target="_blank">
+        <i class="fas fa-envelope"></i> Email
+      </a>
+      <a href="https://www.linkedin.com/in/aaryan-gupta7/" class="contact-btn" target="_blank">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Aaryan Gupta. All rights reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
