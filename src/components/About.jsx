@@ -1,12 +1,11 @@
-
 import React from 'react';
 
 const About = () => {
   const skills = {
-    "Languages": ["Python", "Java", "C", "Assembly"],
-    "Software": ["Git", "Agile", "System Architecture", "Debugging"],
-    "Cybersecurity": ["Encryption", "Access Control", "RAID", "Disaster Recovery"],
-    "Interests": ["AI", "Cybersecurity", "Robotics"],
+    "Languages": ["Python", "Java", "C", "Assembly", "JavaScript"],
+    "Software": ["Git", "Agile", "Debugging", "IntelliJ", "Visual Studio Code", "Cursor"],
+    "Frameworks": ["Node.js", "React", "Express", "MongoDB"],
+    "Interests": ["AI", "Cybersecurity", "Robotics", "System Architecture"],
     "Soft Skills": ["Mentoring", "Teamwork", "Empathy", "Communication"]
   };
 
@@ -22,14 +21,12 @@ const About = () => {
         <div className="space-y-6">
           <div className="text-lg leading-relaxed text-gray-300 space-y-4">
             <p>
-              This dual focus has helped me see both the code and the context—how technology can be designed not just to work, 
-              but to solve real problems and create value. Over time, I've become more analytical, detail-oriented, and thoughtful 
-              in how I approach problems.
+              I believe in building solutions that work—not just in code, but in the real world. By blending my technical skills in systems programming, 
+              data structures, and algorithms with a growing understanding of business strategy and problem-solving, I aim to create technology that delivers real value.
             </p>
             <p>
-              I've also grown personally—learning how to understand people, work across diverse teams, and bring empathy into collaboration. 
-              I'm excited by opportunities that lie at the intersection of software and strategy, and I'm always looking to contribute to 
-              ambitious projects that push boundaries and make a difference.
+              I've also learned the importance of empathy, teamwork, and understanding diverse perspectives—because the best solutions are built together. 
+              I'm eager to contribute to projects that push boundaries, create impact, and help shape the future.
             </p>
           </div>
         </div>

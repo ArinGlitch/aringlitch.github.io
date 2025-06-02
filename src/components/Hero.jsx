@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const Hero = () => {
@@ -7,17 +6,29 @@ const Hero = () => {
   };
 
   const handleDownloadCV = () => {
-    // Placeholder for CV download - in real implementation, this would link to actual PDF
-    console.log('Download CV clicked');
+    // Create a link element
+    const link = document.createElement('a');
+    // Set the href to your CV file in the public directory
+    link.href = '/assets/cv.pdf';
+    // Set the download attribute
+    link.download = 'Aaryan_Gupta_CV.pdf';
+    // Append to the document
+    document.body.appendChild(link);
+    // Trigger the click
+    link.click();
+    // Clean up
+    document.body.removeChild(link);
   };
 
   return (
     <section className="min-h-screen flex items-center justify-center section-padding">
       <div className="text-center max-w-4xl animate-fade-in">
-        <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-br from-accent-green/20 to-accent-cyan/20 border border-accent-green/30 flex items-center justify-center">
-          <div className="w-28 h-28 rounded-full bg-muted flex items-center justify-center text-2xl font-semibold text-accent-green">
-            AG
-          </div>
+        <div className="w-48 h-48 mx-auto mb-8 rounded-full overflow-hidden border-2 border-accent-green/30">
+          <img 
+            src="/assets/profile.jpg" 
+            alt="Aaryan Gupta" 
+            className="w-full h-full object-cover"
+          />
         </div>
         
         <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
@@ -25,7 +36,7 @@ const Hero = () => {
         </h1>
         
         <p className="text-xl md:text-2xl text-muted-foreground mb-8 font-light">
-          Aspiring Software Developer | Computer Science Student | Future Tech Leader
+          Aspiring Software Developer | Computer Science Student | Passionate Problem Solver
         </p>
         
         <div className="max-w-3xl mx-auto mb-12 text-lg leading-relaxed text-gray-300">
