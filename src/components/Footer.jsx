@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
 
@@ -11,19 +10,19 @@ const Footer = () => {
     {
       name: 'GitHub',
       icon: Github,
-      url: 'https://github.com',
+      url: 'https://github.com/ArinGlitch',
       color: 'hover:text-accent-green'
     },
     {
       name: 'LinkedIn',
       icon: Linkedin,
-      url: 'https://linkedin.com',
+      url: 'https://www.linkedin.com/in/aaryan-gupta7/',
       color: 'hover:text-accent-cyan'
     },
     {
       name: 'Email',
       icon: Mail,
-      url: 'mailto:aaryan@example.com',
+      url: 'mailto:aaryan.gupta@mail.utoronto.ca',
       color: 'hover:text-accent-green'
     }
   ];

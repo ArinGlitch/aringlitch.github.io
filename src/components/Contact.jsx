@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 
 const Contact = () => {
@@ -36,7 +35,7 @@ const Contact = () => {
       </div>
       
       <div className="max-w-2xl mx-auto">
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
