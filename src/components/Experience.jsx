@@ -4,6 +4,26 @@ import React from 'react';
 const Experience = () => {
   const experiences = [
     {
+      title: "Software Engineer Intern",
+      company: "Capgemini",
+      period: "Jul 2025 – Aug 2025",
+      description: [
+        "Developed enterprise-grade SAP Work Zone UI Integration Cards using the SAPUI5 library and MVC design pattern, gaining hands-on experience in professional front-end development.",
+        "Curated and optimized custom OData API queries aligned to task specifications, ensuring accurate data retrieval and seamless integration with enterprise systems.",
+        "Rigorously debugged and validated UI components through browser inspection tools and metadata analysis, delivering reliable, production-ready solutions on time."
+      ]
+    },
+    {
+      title: "Machine Learning Intern",
+      company: "SelectAI",
+      period: "Jun 2025 – Jul 2025",
+      description: [
+        "Integrated and applied computer vision and multimodal AI frameworks such as YOLOv8, LLaVA, and MiniGPT to build functional modules and scalable prototypes for end-to-end AI systems.",
+        "Adapted and extended research models into production-ready components, demonstrating the ability to quickly learn emerging frameworks and apply them to practical R&D use cases.",
+        "Independently developed and tested complex modules, showing initiative, ownership, and technical depth while collaborating within an applied research environment."
+      ]
+    },
+    {
       title: "Cybersecurity Intern",
       company: "AIIPLTECH",
       period: "Jun–Aug 2023",
