@@ -6,6 +6,8 @@ const Contact = () => {
     email: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -14,13 +16,45 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Placeholder for form submission logic
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({ name: '', email: '', message: '' });
-    alert('Thank you for your message! I\'ll get back to you soon.');
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'fb983ca9-dfbf-40cd-ac8c-acc0bd19d05f', // Replace with your Web3Forms access key
+          to_email: 'aaryan.gupta@mail.utoronto.ca',
+          from_name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          subject: `Portfolio Contact: Message from ${formData.name}`,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      // Fallback to mailto if API fails
+      const subject = encodeURIComponent(`Portfolio Contact: Message from ${formData.name}`);
+      const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
+      window.location.href = `mailto:aaryan.gupta@mail.utoronto.ca?subject=${subject}&body=${body}`;
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -35,7 +69,17 @@ const Contact = () => {
       </div>
       
       <div className="max-w-2xl mx-auto">
-        <form onSubmit={handleSubmit} className="space-y-6" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        {submitStatus === 'success' && (
+          <div className="mb-6 p-4 bg-accent-green/10 border border-accent-green rounded-lg text-accent-green text-center">
+            Thank you for your message! I'll get back to you soon.
+          </div>
+        )}
+        {submitStatus === 'error' && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500 rounded-lg text-red-400 text-center">
+            Something went wrong. Please try again or email me directly.
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
@@ -95,9 +139,10 @@ const Contact = () => {
           <div className="text-center">
             <button
               type="submit"
-              className="btn-primary text-lg px-8 py-4"
+              disabled={isSubmitting}
+              className="btn-primary text-lg px-8 py-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Send Message
+              {isSubmitting ? 'Sending...' : 'Send Message'}
             </button>
           </div>
         </form>

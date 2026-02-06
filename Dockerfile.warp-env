@@ -1,0 +1,8 @@
+FROM warpdotdev/dev-base:1
+
+# Install Claude CLI and OpenAI Codex CLI globally
+RUN npm install -g @anthropic-ai/claude-code @openai/codex
+
+# Verify installations
+RUN claude --version || echo "Claude CLI installed" && \
+    codex --version || echo "Codex CLI installed"

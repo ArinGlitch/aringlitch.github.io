@@ -1,8 +1,27 @@
-
 import React from 'react';
 
 const Experience = () => {
   const experiences = [
+    {
+      title: "Software Engineer, Research",
+      company: "Rotman School of Management, University of Toronto",
+      period: "Jan 2026 – Present",
+      description: [
+        "Building a corporate finance simulator modeling investment decisions, financing strategies, and real-time impact on financial statements—directly applying accounting principles (debits, credits, balance sheets) in code.",
+        "Architecting full-stack application with Next.js, TypeScript, PostgreSQL, and Prisma ORM; designing type-safe database schemas to handle complex financial workflows with sub-second query response times.",
+        "Collaborating with finance faculty to translate domain requirements into technical solutions; communicating trade-offs to non-technical stakeholders."
+      ]
+    },
+    {
+      title: "Teaching Assistant",
+      company: "University of Toronto",
+      period: "Jan 2026 – Present",
+      description: [
+        "Assisted in teaching CSC263H5 (Data Structures & Analysis) by clarifying concepts and answering student inquiries.",
+        "Led tutorials that emphasized problem-solving techniques and understanding of core data structures and algorithms.",
+        "Fostered a collaborative learning environment to enhance student engagement and comprehension."
+      ]
+    },
     {
       title: "Software Engineer Intern",
       company: "Capgemini",
@@ -26,7 +45,7 @@ const Experience = () => {
     {
       title: "Cybersecurity Intern",
       company: "AIIPLTECH",
-      period: "Jun–Aug 2023",
+      period: "Jun – Aug 2023",
       description: [
         "Conducted security audits, identified vulnerabilities, and implemented encryption, hashing, and steganography techniques to enhance data security.",
         "Explored hardware architecture by disassembling and reassembling PCs, performed troubleshooting, and gained hands-on experience in RAID and disaster recovery strategies.",
@@ -36,7 +55,7 @@ const Experience = () => {
     {
       title: "Teaching Assistant",
       company: "The IITian's Hub",
-      period: "Apr 2021–Apr 2023",
+      period: "Apr 2021 – Apr 2023",
       description: [
         "Mentored 10+ high school students for the IIT-JEE, focusing on Physics, Chemistry, and Mathematics.",
         "Led weekly problem-solving sessions addressing over 100 complex questions, improving student understanding and performance.",

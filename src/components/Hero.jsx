@@ -9,7 +9,7 @@ const Hero = () => {
     // Create a link element
     const link = document.createElement('a');
     // Set the href to your CV file in the public directory
-    link.href = '/assets/cv.pdf';
+    link.href = '/cv.pdf';
     // Set the download attribute
     link.download = 'Aaryan_Gupta_CV.pdf';
     // Append to the document
@@ -36,14 +36,14 @@ const Hero = () => {
         </h1>
         
         <p className="text-xl md:text-2xl text-muted-foreground mb-8 font-light">
-          Aspiring Software Developer | Computer Science Student | Passionate Problem Solver
+          Systems Programmer | Full-Stack Developer | CS @ University of Toronto
         </p>
         
         <div className="max-w-3xl mx-auto mb-12 text-lg leading-relaxed text-gray-300">
           <p>
-            I'm a builder at heart—equally drawn to the elegance of a well-structured algorithm and the strategy behind a bold business idea. 
-            Now in my second year studying Computer Science at the University of Toronto, I've been deepening my expertise in systems programming, 
-            data structures, and algorithmic thinking, while also developing a sharp understanding of business strategy, marketing, and entrepreneurship.
+            I build software that works at every level of the stack—from kernel modules and concurrent file systems to full-stack web apps with real-time 3D visualization. 
+            Currently a second-year Computer Science Specialist at UofT, I've shipped production code at Capgemini, built ML pipelines at SelectAI, and now architect financial simulations at Rotman. 
+            I thrive on solving hard problems: thread synchronization, memory management, and turning complex requirements into clean, maintainable systems.
           </p>
         </div>
         
