@@ -137,23 +137,32 @@ const ChatBot = () => {
       {/* Chat Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center ${
+        className={`fixed bottom-6 right-6 z-[9999] w-16 h-16 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center ${
           isOpen 
-            ? 'bg-gray-800 hover:bg-gray-700 rotate-0' 
-            : 'bg-gradient-to-r from-accent-green to-accent-cyan hover:scale-110'
+            ? 'bg-gray-800 hover:bg-gray-700' 
+            : 'bg-gradient-to-r from-accent-green to-accent-cyan hover:scale-110 animate-pulse'
         }`}
+        style={{ boxShadow: isOpen ? '' : '0 0 20px rgba(0, 255, 136, 0.5)' }}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
         {isOpen ? (
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         ) : (
-          <svg className="w-7 h-7 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          <svg className="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z" />
           </svg>
         )}
       </button>
+      
+      {/* Tooltip when closed */}
+      {!isOpen && (
+        <div className="fixed bottom-24 right-6 z-[9999] bg-gray-900 text-white text-sm px-3 py-2 rounded-lg shadow-lg border border-gray-700 animate-bounce">
+          <span>Ask me anything! 💬</span>
+          <div className="absolute -bottom-2 right-6 w-3 h-3 bg-gray-900 border-r border-b border-gray-700 transform rotate-45"></div>
+        </div>
+      )}
 
       {/* Chat Window */}
       <div
