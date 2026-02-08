@@ -1,5 +1,6 @@
 
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class"],
@@ -85,11 +86,22 @@ export default {
 						transform: "translateY(0)"
 					}
 				},
+				"pulse-scale": {
+					"0%, 100%": {
+						transform: "scale(1)",
+						boxShadow: "0 0 10px rgba(0, 255, 136, 0.5)"
+					},
+					"50%": {
+						transform: "scale(1.1)",
+						boxShadow: "0 0 25px 5px rgba(0, 255, 136, 0.8)"
+					}
+				}
 			},
 			animation: {
 				'fade-in': 'fade-in 0.3s ease-out',
+				'pulse-scale': 'pulse-scale 2s infinite ease-in-out',
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [tailwindcssAnimate],
 } satisfies Config;

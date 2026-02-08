@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Bot, X } from 'lucide-react';
 
 const GEMINI_API_KEY = 'AIzaSyAFyRJtjReD2RBWUE0sLGdbtUmu53qDJ2s';
 
@@ -116,9 +117,9 @@ const ChatBot = () => {
       setMessages(prev => [...prev, { role: 'assistant', content: text }]);
     } catch (error) {
       console.error('Error:', error);
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: "Sorry, I encountered an error. Please try again or reach out to Aaryan directly at aaryan.gupta@mail.utoronto.ca" 
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: "Sorry, I encountered an error. Please try again or reach out to Aaryan directly at aaryan.gupta@mail.utoronto.ca"
       }]);
     } finally {
       setIsLoading(false);
@@ -137,40 +138,27 @@ const ChatBot = () => {
       {/* Chat Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 z-[9999] w-16 h-16 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center ${
-          isOpen 
-            ? 'bg-gray-800 hover:bg-gray-700' 
-            : 'bg-gradient-to-r from-accent-green to-accent-cyan hover:scale-110 animate-pulse'
-        }`}
-        style={{ boxShadow: isOpen ? '' : '0 0 20px rgba(0, 255, 136, 0.5)' }}
+        className={`fixed bottom-6 right-6 z-[9999] w-16 h-16 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center ${isOpen
+          ? 'bg-gray-800 hover:bg-gray-700'
+          : 'bg-gradient-to-r from-accent-green to-accent-cyan hover:scale-110 animate-pulse-scale hover:animate-none hover:shadow-[0_0_30px_rgba(0,255,136,0.8)]'
+          }`}
+        style={{ boxShadow: isOpen ? '' : undefined }}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
         {isOpen ? (
-          <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <X className="w-7 h-7 text-white" />
         ) : (
-          <svg className="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z" />
-          </svg>
+          <Bot className="w-8 h-8 text-black" />
         )}
       </button>
-      
-      {/* Tooltip when closed */}
-      {!isOpen && (
-        <div className="fixed bottom-24 right-6 z-[9999] bg-gray-900 text-white text-sm px-3 py-2 rounded-lg shadow-lg border border-gray-700 animate-bounce">
-          <span>Ask me anything! 💬</span>
-          <div className="absolute -bottom-2 right-6 w-3 h-3 bg-gray-900 border-r border-b border-gray-700 transform rotate-45"></div>
-        </div>
-      )}
+
 
       {/* Chat Window */}
       <div
-        className={`fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] transition-all duration-300 ${
-          isOpen 
-            ? 'opacity-100 translate-y-0 pointer-events-auto' 
-            : 'opacity-0 translate-y-4 pointer-events-none'
-        }`}
+        className={`fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] transition-all duration-300 ${isOpen
+          ? 'opacity-100 translate-y-0 pointer-events-auto'
+          : 'opacity-0 translate-y-4 pointer-events-none'
+          }`}
       >
         <div className="bg-gray-900 rounded-2xl shadow-2xl border border-gray-800 overflow-hidden flex flex-col h-[500px] max-h-[calc(100vh-8rem)]">
           {/* Header */}
@@ -196,11 +184,10 @@ const ChatBot = () => {
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
-                    message.role === 'user'
-                      ? 'bg-gradient-to-r from-accent-green to-accent-cyan text-black rounded-br-md'
-                      : 'bg-gray-800 text-gray-100 rounded-bl-md'
-                  }`}
+                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${message.role === 'user'
+                    ? 'bg-gradient-to-r from-accent-green to-accent-cyan text-black rounded-br-md'
+                    : 'bg-gray-800 text-gray-100 rounded-bl-md'
+                    }`}
                 >
                   <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
                 </div>
