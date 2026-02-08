@@ -92,7 +92,7 @@ const ChatBot = () => {
 
     try {
       const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
 
       // Filter history to only include valid roles for Gemini (user/model)
       const chatHistory = messages
@@ -211,10 +211,10 @@ const ChatBot = () => {
 
                           <div
                             className={`p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${message.role === 'user'
-                                ? 'bg-gradient-to-r from-accent-green to-accent-cyan text-black rounded-br-none font-medium'
-                                : message.isError
-                                  ? 'bg-red-500/10 text-red-200 border border-red-500/20 rounded-bl-none'
-                                  : 'bg-white/10 text-gray-100 border border-white/5 rounded-bl-none backdrop-blur-sm'
+                              ? 'bg-gradient-to-r from-accent-green to-accent-cyan text-black rounded-br-none font-medium'
+                              : message.isError
+                                ? 'bg-red-500/10 text-red-200 border border-red-500/20 rounded-bl-none'
+                                : 'bg-white/10 text-gray-100 border border-white/5 rounded-bl-none backdrop-blur-sm'
                               }`}
                           >
                             {message.content}
@@ -278,8 +278,8 @@ const ChatBot = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         className={`fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-colors duration-300 ${isOpen
-            ? 'bg-gray-800 text-white'
-            : 'bg-gradient-to-r from-accent-green to-accent-cyan text-black animate-pulse-scale'
+          ? 'bg-gray-800 text-white'
+          : 'bg-gradient-to-r from-accent-green to-accent-cyan text-white animate-pulse-scale'
           }`}
       >
         <AnimatePresence mode="wait">
@@ -291,7 +291,7 @@ const ChatBot = () => {
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <X className="w-6 h-6" />
+              <X className="w-6 h-6 text-white" />
             </motion.div>
           ) : (
             <motion.div
@@ -301,7 +301,7 @@ const ChatBot = () => {
               exit={{ rotate: -90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <MessageCircle className="w-7 h-7" />
+              <MessageCircle className="w-7 h-7 text-white drop-shadow-md" />
             </motion.div>
           )}
         </AnimatePresence>
