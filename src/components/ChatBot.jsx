@@ -1,6 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { Bot, X } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Sparkles, Bot } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 
 const GEMINI_API_KEY = 'AIzaSyAFyRJtjReD2RBWUE0sLGdbtUmu53qDJ2s';
 
@@ -64,8 +71,8 @@ const ChatBot = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const scrollAreaRef = useRef(null);
   const messagesEndRef = useRef(null);
-  const inputRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -74,12 +81,6 @@ const ChatBot = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isOpen]);
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -93,10 +94,13 @@ const ChatBot = () => {
       const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-      const chatHistory = messages.map(msg => ({
-        role: msg.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: msg.content }]
-      }));
+      // Filter history to only include valid roles for Gemini (user/model)
+      const chatHistory = messages
+        .filter(msg => msg.role !== 'error') // Exclude error messages from history
+        .map(msg => ({
+          role: msg.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: msg.content }]
+        }));
 
       const chat = model.startChat({
         history: [
@@ -116,10 +120,21 @@ const ChatBot = () => {
 
       setMessages(prev => [...prev, { role: 'assistant', content: text }]);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Gemini API Error:', error);
+      let errorMessage = "Sorry, I encountered an error. Please try again later.";
+
+      if (error.message?.includes('API key not valid')) {
+        errorMessage = "Error: Invalid API Key. Please contact the administrator.";
+      } else if (error.message?.includes('quota')) {
+        errorMessage = "Error: API Quota Exceeded. Please try again later.";
+      } else if (error.message) {
+        errorMessage = `Error: ${error.message.slice(0, 100)}...`; // Truncate long errors
+      }
+
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: "Sorry, I encountered an error. Please try again or reach out to Aaryan directly at aaryan.gupta@mail.utoronto.ca"
+        content: errorMessage,
+        isError: true
       }]);
     } finally {
       setIsLoading(false);
@@ -135,107 +150,162 @@ const ChatBot = () => {
 
   return (
     <>
-      {/* Chat Toggle Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 z-[9999] w-16 h-16 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center ${isOpen
-          ? 'bg-gray-800 hover:bg-gray-700'
-          : 'bg-gradient-to-r from-accent-green to-accent-cyan hover:scale-110 animate-pulse-scale hover:animate-none hover:shadow-[0_0_30px_rgba(0,255,136,0.8)]'
-          }`}
-        style={{ boxShadow: isOpen ? '' : undefined }}
-        aria-label={isOpen ? 'Close chat' : 'Open chat'}
-      >
-        {isOpen ? (
-          <X className="w-7 h-7 text-white" />
-        ) : (
-          <Bot className="w-8 h-8 text-black" />
-        )}
-      </button>
-
-
-      {/* Chat Window */}
-      <div
-        className={`fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] transition-all duration-300 ${isOpen
-          ? 'opacity-100 translate-y-0 pointer-events-auto'
-          : 'opacity-0 translate-y-4 pointer-events-none'
-          }`}
-      >
-        <div className="bg-gray-900 rounded-2xl shadow-2xl border border-gray-800 overflow-hidden flex flex-col h-[500px] max-h-[calc(100vh-8rem)]">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-accent-green/20 to-accent-cyan/20 px-4 py-3 border-b border-gray-800">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-accent-green to-accent-cyan flex items-center justify-center">
-                <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-white text-sm">Ask About Aaryan</h3>
-                <p className="text-xs text-gray-400">Powered by Gemini AI</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${message.role === 'user'
-                    ? 'bg-gradient-to-r from-accent-green to-accent-cyan text-black rounded-br-md'
-                    : 'bg-gray-800 text-gray-100 rounded-bl-md'
-                    }`}
-                >
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-800 rounded-2xl rounded-bl-md px-4 py-3">
-                  <div className="flex gap-1.5">
-                    <div className="w-2 h-2 bg-accent-green rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 bg-accent-cyan rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-2 h-2 bg-accent-green rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)]"
+          >
+            <Card className="border-accent-green/30 shadow-2xl bg-black/80 backdrop-blur-md overflow-hidden">
+              <CardHeader className="p-4 border-b border-white/10 bg-gradient-to-r from-accent-green/10 to-accent-cyan/10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-accent-green to-accent-cyan flex items-center justify-center shadow-lg shadow-accent-green/20">
+                      <Bot className="w-6 h-6 text-black" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-white text-base font-bold flex items-center gap-2">
+                        Aaryan's Assistant
+                        <Badge variant="outline" className="text-[10px] py-0 h-4 border-accent-green text-accent-green bg-accent-green/10">BETA</Badge>
+                      </CardTitle>
+                      <p className="text-xs text-gray-400 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                        Online
+                      </p>
+                    </div>
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsOpen(false)}
+                    className="text-gray-400 hover:text-white hover:bg-white/10 rounded-full h-8 w-8"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
                 </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+              </CardHeader>
 
-          {/* Input */}
-          <div className="p-3 border-t border-gray-800 bg-gray-900/50">
-            <div className="flex gap-2">
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask about projects, skills, experience..."
-                disabled={isLoading}
-                className="flex-1 bg-gray-800 text-white text-sm rounded-xl px-4 py-2.5 border border-gray-700 focus:border-accent-green focus:outline-none focus:ring-1 focus:ring-accent-green/50 placeholder-gray-500 disabled:opacity-50"
-              />
-              <button
-                onClick={sendMessage}
-                disabled={isLoading || !input.trim()}
-                className="px-4 py-2.5 bg-gradient-to-r from-accent-green to-accent-cyan text-black rounded-xl font-medium text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
-              </button>
-            </div>
-            <p className="text-[10px] text-gray-500 mt-2 text-center">
-              Press Enter to send • AI responses may not be 100% accurate
-            </p>
-          </div>
-        </div>
-      </div>
+              <CardContent className="p-0 h-[400px]">
+                <ScrollArea className="h-full p-4" ref={scrollAreaRef}>
+                  <div className="space-y-4">
+                    {messages.map((message, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div className={`flex items-end gap-2 max-w-[85%] ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                          {message.role !== 'user' && (
+                            <Avatar className="w-6 h-6 ring-1 ring-white/10">
+                              <AvatarFallback className="bg-accent-green/20 text-accent-green text-[10px]">AI</AvatarFallback>
+                              <div className="w-full h-full bg-gradient-to-tr from-accent-green to-accent-cyan flex items-center justify-center">
+                                <Sparkles className="w-3 h-3 text-black" />
+                              </div>
+                            </Avatar>
+                          )}
+
+                          <div
+                            className={`p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${message.role === 'user'
+                                ? 'bg-gradient-to-r from-accent-green to-accent-cyan text-black rounded-br-none font-medium'
+                                : message.isError
+                                  ? 'bg-red-500/10 text-red-200 border border-red-500/20 rounded-bl-none'
+                                  : 'bg-white/10 text-gray-100 border border-white/5 rounded-bl-none backdrop-blur-sm'
+                              }`}
+                          >
+                            {message.content}
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+
+                    {isLoading && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex justify-start"
+                      >
+                        <div className="flex items-end gap-2">
+                          <Avatar className="w-6 h-6 ring-1 ring-white/10">
+                            <div className="w-full h-full bg-gradient-to-tr from-accent-green to-accent-cyan flex items-center justify-center">
+                              <Sparkles className="w-3 h-3 text-black" />
+                            </div>
+                          </Avatar>
+                          <div className="bg-white/10 rounded-2xl rounded-bl-none px-4 py-3 flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 bg-accent-green rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                            <div className="w-1.5 h-1.5 bg-accent-cyan rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                            <div className="w-1.5 h-1.5 bg-accent-green rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                    <div ref={messagesEndRef} />
+                  </div>
+                </ScrollArea>
+              </CardContent>
+
+              <CardFooter className="p-3 bg-black/20 border-t border-white/5">
+                <div className="flex w-full gap-2 items-center">
+                  <Input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Ask about my projects..."
+                    className="bg-white/5 border-white/10 focus-visible:ring-accent-green/50 text-white placeholder-gray-500"
+                    disabled={isLoading}
+                  />
+                  <Button
+                    onClick={sendMessage}
+                    disabled={isLoading || !input.trim()}
+                    size="icon"
+                    className="bg-accent-green hover:bg-accent-green/80 text-black rounded-lg shrink-0 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
+                  >
+                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </CardFooter>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.button
+        onClick={() => setIsOpen(!isOpen)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className={`fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-colors duration-300 ${isOpen
+            ? 'bg-gray-800 text-white'
+            : 'bg-gradient-to-r from-accent-green to-accent-cyan text-black animate-pulse-scale'
+          }`}
+      >
+        <AnimatePresence mode="wait">
+          {isOpen ? (
+            <motion.div
+              key="close"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <X className="w-6 h-6" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="chat"
+              initial={{ rotate: 90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: -90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <MessageCircle className="w-7 h-7" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.button>
     </>
   );
 };
