@@ -12,7 +12,7 @@ export const projects = [
       "Handled low-level systems concerns and edge cases rigorously, including correct error propagation, metadata updates (link counts, deletion times, block usage), rollback on failure, and strict adherence to EXT2 layout constraints, passing comprehensive sequential and concurrency stress tests."
     ],
     skills: ["Operating Systems", "C", "Concurrency", "Systems Programming", "Kernel Programming"],
-    image: "/assets/projects/ext2-filesystem.jpg",
+    images: ["/assets/projects/ext2-filesystem.jpg"],
     github: null,
     demo: null
   },
@@ -33,7 +33,7 @@ export const projects = [
       "Created a modern, immersive UI with custom lighting, orbit animations, and responsive graph interactions for an intuitive study experience."
     ],
     skills: ["Node.js", "Express.js", "React.js", "TypeScript", "Three.js", "SQLite", "AI Integration", "Software Design Patterns"],
-    image: "/assets/projects/knowledge-nexus.jpg",
+    images: ["/assets/projects/knowledge-nexus.jpg"],
     github: null,
     demo: null
   },
@@ -50,7 +50,7 @@ export const projects = [
       "Evaluated system-level performance using trace-driven simulation, comparing hit rates, eviction patterns, and workload sensitivity to derive practical recommendations for memory management policies."
     ],
     skills: ["Operating Systems", "C", "Concurrency", "Kernel Programming", "Data Structures", "Systems Programming"],
-    image: "/assets/projects/vm-simulator.jpg",
+    images: ["/assets/projects/vm-simulator.jpg"],
     github: null,
     demo: null
   },
@@ -70,7 +70,7 @@ export const projects = [
       "Authored a technical report on synchronization bugs and a starvation analysis discussing fairness in continuous job submissions."
     ],
     skills: ["C", "POSIX Threads", "Mutex Locks", "Condition Variables", "Valgrind", "Operating Systems"],
-    image: "/assets/projects/job-executor.jpg",
+    images: ["/assets/projects/job-executor.jpg"],
     github: null,
     demo: null
   },
@@ -92,7 +92,7 @@ export const projects = [
       "Achieved full functional validation, successfully restoring original syscall behavior upon module unload without affecting kernel stability."
     ],
     skills: ["C", "Kernel Programming", "Linux Kernel", "GCC", "GDB", "Synchronization", "Operating Systems"],
-    image: "/assets/projects/syscall-interceptor.jpg",
+    images: ["/assets/projects/syscall-interceptor.jpg"],
     github: null,
     demo: null
   },
@@ -113,7 +113,7 @@ export const projects = [
       "Focused on UI/UX design principles for a clean, intuitive interface tailored to academic use cases."
     ],
     skills: ["React.js", "Express.js", "MongoDB", "Node.js", "Mongoose", "JWT", "Chakra UI", "Vite"],
-    image: "/assets/projects/student-suite.jpg",
+    images: ["/assets/projects/student-suite.jpg"],
     github: "https://github.com/ArinGlitch/student-suite",
     demo: null
   },
@@ -130,7 +130,7 @@ export const projects = [
       "Added networking functionality by developing socket-based communication, enabling multiple clients to connect and exchange messages, while optimizing memory management for leak prevention and efficient resource handling."
     ],
     skills: ["C", "Systems Programming", "Linux", "Git", "Debugging"],
-    image: "/assets/projects/linux-shell.png",
+    images: ["/assets/projects/linux-shell.png"],
     github: null,
     demo: null
   },
@@ -150,7 +150,7 @@ export const projects = [
       "TFT Display Integration: Provides a physical interface for local monitoring."
     ],
     skills: ["ESP32", "C++", "Arduino IDE", "HTML", "CSS", "JavaScript", "WiFi", "SMTP"],
-    image: "/assets/projects/plant-monitor.jpg",
+    images: ["/assets/projects/plant-monitor.jpg"],
     github: "https://github.com/ArinGlitch/Plant-Monitoring-System",
     demo: null
   },
@@ -167,7 +167,7 @@ export const projects = [
       "Applied key software design patterns (MVC, Command, Observer-Observable, Strategy, Builder, Factory) to ensure a scalable, modular, and maintainable architecture, while designing an intuitive GUI (JavaFX) with real-time undo-redo and interactive UI updates."
     ],
     skills: ["Java", "JavaFX", "Software Design Patterns", "Agile", "Git", "API Integration", "OOP"],
-    image: "/assets/projects/paint-app.jpg",
+    images: ["/assets/projects/paint-app.jpg"],
     github: null,
     demo: null
   },
@@ -184,7 +184,7 @@ export const projects = [
       "Implemented cheat codes, such as unlimited undo and portals to enhance gameplay flexibility and allow players to experiment with different strategies."
     ],
     skills: ["Assembly Language", "RISC-V", "Critical Thinking", "Debugging"],
-    image: "/assets/projects/sokoban.gif",
+    images: ["/assets/projects/sokoban.gif"],
     github: null,
     demo: null
   },
@@ -201,7 +201,7 @@ export const projects = [
       "Designed an intuitive, user-friendly GUI, enabling seamless interaction and exploration of complex memory hierarchies."
     ],
     skills: ["Python", "Data Structures", "GUI Development", "OOP"],
-    image: "/assets/projects/memory-visualizer.jpg",
+    images: ["/assets/projects/memory-visualizer.jpg"],
     github: null,
     demo: null
   }

@@ -16,13 +16,13 @@ const Projects = () => {
           A showcase of my technical expertise and problem-solving capabilities
         </p>
       </div>
-      
+
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {displayedProjects.map((project, index) => (
           <article key={index} className="project-card group">
             <div className="aspect-video mb-6 rounded-lg overflow-hidden bg-muted">
-              <img 
-                src={project.image} 
+              <img
+                src={project.images[0]}
                 alt={project.title}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 onError={(e) => {
@@ -30,7 +30,7 @@ const Projects = () => {
                 }}
               />
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-start gap-3 flex-wrap">
                 <h3 className="text-lg font-semibold text-white">{project.title}</h3>
@@ -38,20 +38,20 @@ const Projects = () => {
                   {project.technology}
                 </span>
               </div>
-              
+
               {project.period && (
                 <p className="text-sm text-muted-foreground">{project.period}</p>
               )}
-              
+
               <p className="text-gray-300 leading-relaxed text-sm line-clamp-3">
                 {project.shortDescription}
               </p>
-              
-              <Link 
+
+              <Link
                 to={`/project/${project.slug}`}
                 className="inline-flex items-center text-accent-cyan hover:text-white transition-colors duration-300"
               >
-                View Project 
+                View Project
                 <span className="ml-2">→</span>
               </Link>
             </div>
@@ -61,7 +61,7 @@ const Projects = () => {
 
       {projects.length > 6 && (
         <div className="text-center mt-12">
-          <button 
+          <button
             onClick={() => setShowAll(!showAll)}
             className="btn-secondary"
           >

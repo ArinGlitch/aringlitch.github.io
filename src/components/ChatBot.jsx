@@ -9,8 +9,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 
-const GEMINI_API_KEY = 'AIzaSyAFyRJtjReD2RBWUE0sLGdbtUmu53qDJ2s';
-
 const AARYAN_CONTEXT = `You are a helpful AI assistant on Aaryan Gupta's personal portfolio website. Your role is to answer questions about Aaryan based on the following information. Be friendly, concise, and professional. If asked about something not covered below, politely say you don't have that information but suggest they reach out to Aaryan directly.
 
 === ABOUT AARYAN ===
@@ -82,43 +80,74 @@ const ChatBot = () => {
     scrollToBottom();
   }, [messages]);
 
-  const sendMessage = async () => {
+  const sendMessage = async (e) => {
+    e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const userMessage = input.trim();
+    const userMessage = { role: 'user', parts: [{ text: input }] };
+    setMessages((prev) => [...prev, userMessage]);
     setInput('');
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
 
     try {
-      const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
+      // Check for local env key (for development)
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-      // Filter history to only include valid roles for Gemini (user/model)
-      const chatHistory = messages
-        .filter(msg => msg.role !== 'error') // Exclude error messages from history
-        .map(msg => ({
-          role: msg.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: msg.content }]
-        }));
+      let text = '';
 
-      const chat = model.startChat({
-        history: [
-          { role: 'user', parts: [{ text: AARYAN_CONTEXT }] },
-          { role: 'model', parts: [{ text: "I understand. I'm ready to answer questions about Aaryan Gupta based on this information." }] },
-          ...chatHistory
-        ],
-        generationConfig: {
-          maxOutputTokens: 500,
-          temperature: 0.7,
-        },
-      });
+      // Prepare chat history including the context
+      const chatHistoryWithContext = [
+        { role: 'user', parts: [{ text: AARYAN_CONTEXT }] },
+        { role: 'model', parts: [{ text: "I understand. I'm ready to answer questions about Aaryan Gupta based on this information." }] },
+        ...messages
+          .filter((msg) => msg.role === 'user' || msg.role === 'model')
+          .map((msg) => ({
+            role: msg.role,
+            parts: msg.parts,
+          }))
+      ];
 
-      const result = await chat.sendMessage(userMessage);
-      const response = await result.response;
-      const text = response.text();
+      if (apiKey) {
+        // Client-side call (Local Dev)
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
 
-      setMessages(prev => [...prev, { role: 'assistant', content: text }]);
+        const chat = model.startChat({
+          history: chatHistoryWithContext,
+          generationConfig: {
+            maxOutputTokens: 500,
+            temperature: 0.7,
+          },
+        });
+
+        const result = await chat.sendMessage(input);
+        const response = await result.response;
+        text = response.text();
+      } else {
+        // Server-side call (Vercel / Backend)
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: input,
+            history: chatHistoryWithContext, // Send full history including context
+            modelName: 'gemini-flash-latest'
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch response');
+        }
+
+        const data = await response.json();
+        text = data.text;
+      }
+
+      setMessages((prev) => [
+        ...prev,
+        { role: 'model', parts: [{ text: text }] },
+      ]);
     } catch (error) {
       console.error('Gemini API Error:', error);
       let errorMessage = "Sorry, I encountered an error. Please try again later.";
