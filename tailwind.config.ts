@@ -89,17 +89,17 @@ export default {
 				"pulse-scale": {
 					"0%, 100%": {
 						transform: "scale(1)",
-						boxShadow: "0 0 10px rgba(0, 255, 136, 0.5)"
+						boxShadow: "0 0 8px rgba(0, 255, 136, 0.35)"
 					},
 					"50%": {
-						transform: "scale(1.1)",
-						boxShadow: "0 0 25px 5px rgba(0, 255, 136, 0.8)"
+						transform: "scale(1.05)",
+						boxShadow: "0 0 20px 3px rgba(0, 255, 136, 0.6)"
 					}
 				}
 			},
 			animation: {
 				'fade-in': 'fade-in 0.3s ease-out',
-				'pulse-scale': 'pulse-scale 6s infinite ease-in-out',
+				'pulse-scale': 'pulse-scale 16s infinite ease-in-out',
 			}
 		}
 	},

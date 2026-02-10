@@ -63,6 +63,7 @@ const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
+      id: 'welcome',
       role: 'assistant',
       content: "Hi! I'm Aaryan's AI assistant. Ask me anything about his projects, experience, or skills!"
     }
@@ -80,12 +81,29 @@ const ChatBot = () => {
     scrollToBottom();
   }, [messages]);
 
-  const sendMessage = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  const createId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
-    const userMessage = { role: 'user', parts: [{ text: input }] };
-    setMessages((prev) => [...prev, userMessage]);
+  const buildHistory = (historyMessages) => {
+    return historyMessages
+      .filter((msg) => !msg.isTyping && !msg.isError && msg.content?.trim())
+      .map((msg) => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }],
+      }));
+  };
+
+  const sendMessage = async (e) => {
+    if (e?.preventDefault) e.preventDefault();
+    const trimmed = input.trim();
+    if (!trimmed || isLoading) return;
+
+    const userMessage = { id: createId(), role: 'user', content: trimmed };
+    const pendingId = createId();
+    setMessages((prev) => [
+      ...prev,
+      userMessage,
+      { id: pendingId, role: 'assistant', content: '', isTyping: true },
+    ]);
     setInput('');
     setIsLoading(true);
 
@@ -99,12 +117,7 @@ const ChatBot = () => {
       const chatHistoryWithContext = [
         { role: 'user', parts: [{ text: AARYAN_CONTEXT }] },
         { role: 'model', parts: [{ text: "I understand. I'm ready to answer questions about Aaryan Gupta based on this information." }] },
-        ...messages
-          .filter((msg) => msg.role === 'user' || msg.role === 'model')
-          .map((msg) => ({
-            role: msg.role,
-            parts: msg.parts,
-          }))
+        ...buildHistory(messages),
       ];
 
       if (apiKey) {
@@ -120,16 +133,18 @@ const ChatBot = () => {
           },
         });
 
-        const result = await chat.sendMessage(input);
+        const result = await chat.sendMessage(trimmed);
         const response = await result.response;
         text = response.text();
       } else {
         // Server-side call (Vercel / Backend)
-        const response = await fetch('/api/chat', {
+        const apiBase = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') || '';
+        const endpoint = apiBase ? `${apiBase}/api/chat` : '/api/chat';
+        const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            message: input,
+            message: trimmed,
             history: chatHistoryWithContext, // Send full history including context
             modelName: 'gemini-flash-latest'
           })
@@ -144,10 +159,17 @@ const ChatBot = () => {
         text = data.text;
       }
 
-      setMessages((prev) => [
-        ...prev,
-        { role: 'model', parts: [{ text: text }] },
-      ]);
+      setMessages((prev) => {
+        let found = false;
+        const next = prev.map((msg) => {
+          if (msg.id !== pendingId) return msg;
+          found = true;
+          return { ...msg, content: text || 'Sorry, I did not receive a response.', isTyping: false };
+        });
+        return found
+          ? next
+          : [...next, { id: createId(), role: 'assistant', content: text || 'Sorry, I did not receive a response.' }];
+      });
     } catch (error) {
       console.error('Gemini API Error:', error);
       let errorMessage = "Sorry, I encountered an error. Please try again later.";
@@ -160,11 +182,17 @@ const ChatBot = () => {
         errorMessage = `Error: ${error.message.slice(0, 100)}...`; // Truncate long errors
       }
 
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: errorMessage,
-        isError: true
-      }]);
+      setMessages((prev) => {
+        let found = false;
+        const next = prev.map((msg) => {
+          if (msg.id !== pendingId) return msg;
+          found = true;
+          return { ...msg, content: errorMessage, isTyping: false, isError: true };
+        });
+        return found
+          ? next
+          : [...next, { id: createId(), role: 'assistant', content: errorMessage, isError: true }];
+      });
     } finally {
       setIsLoading(false);
     }
@@ -173,7 +201,7 @@ const ChatBot = () => {
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendMessage();
+      sendMessage(e);
     }
   };
 
@@ -220,9 +248,9 @@ const ChatBot = () => {
               <CardContent className="p-0 h-[400px]">
                 <ScrollArea className="h-full p-4" ref={scrollAreaRef}>
                   <div className="space-y-4">
-                    {messages.map((message, index) => (
+                    {messages.map((message) => (
                       <motion.div
-                        key={index}
+                        key={message.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3 }}
@@ -246,32 +274,20 @@ const ChatBot = () => {
                                 : 'bg-white/10 text-gray-100 border border-white/5 rounded-bl-none backdrop-blur-sm'
                               }`}
                           >
-                            {message.content}
+                            {message.isTyping ? (
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-1.5 h-1.5 bg-accent-green rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                <div className="w-1.5 h-1.5 bg-accent-cyan rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                <div className="w-1.5 h-1.5 bg-accent-green rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                              </div>
+                            ) : (
+                              message.content
+                            )}
                           </div>
                         </div>
                       </motion.div>
                     ))}
 
-                    {isLoading && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="flex justify-start"
-                      >
-                        <div className="flex items-end gap-2">
-                          <Avatar className="w-6 h-6 ring-1 ring-white/10">
-                            <div className="w-full h-full bg-gradient-to-tr from-accent-green to-accent-cyan flex items-center justify-center">
-                              <Sparkles className="w-3 h-3 text-black" />
-                            </div>
-                          </Avatar>
-                          <div className="bg-white/10 rounded-2xl rounded-bl-none px-4 py-3 flex items-center gap-1.5">
-                            <div className="w-1.5 h-1.5 bg-accent-green rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                            <div className="w-1.5 h-1.5 bg-accent-cyan rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                            <div className="w-1.5 h-1.5 bg-accent-green rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
                     <div ref={messagesEndRef} />
                   </div>
                 </ScrollArea>
@@ -282,7 +298,7 @@ const ChatBot = () => {
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyPress}
                     placeholder="Ask about my projects..."
                     className="bg-white/5 border-white/10 focus-visible:ring-accent-green/50 text-white placeholder-gray-500"
                     disabled={isLoading}
