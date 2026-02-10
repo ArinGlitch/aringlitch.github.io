@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { MessageCircle, X, Send, Loader2, Sparkles, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -108,9 +107,6 @@ const ChatBot = () => {
     setIsLoading(true);
 
     try {
-      // Check for local env key (for development)
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
       let text = '';
 
       // Prepare chat history including the context
@@ -120,44 +116,26 @@ const ChatBot = () => {
         ...buildHistory(messages),
       ];
 
-      if (apiKey) {
-        // Client-side call (Local Dev)
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
+      // Server-side call only
+      const apiBase = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') || '';
+      const endpoint = apiBase ? `${apiBase}/api/chat` : '/api/chat';
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: trimmed,
+          history: chatHistoryWithContext, // Send full history including context
+          modelName: 'gemini-flash-latest'
+        })
+      });
 
-        const chat = model.startChat({
-          history: chatHistoryWithContext,
-          generationConfig: {
-            maxOutputTokens: 500,
-            temperature: 0.7,
-          },
-        });
-
-        const result = await chat.sendMessage(trimmed);
-        const response = await result.response;
-        text = response.text();
-      } else {
-        // Server-side call (Vercel / Backend)
-        const apiBase = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') || '';
-        const endpoint = apiBase ? `${apiBase}/api/chat` : '/api/chat';
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: trimmed,
-            history: chatHistoryWithContext, // Send full history including context
-            modelName: 'gemini-flash-latest'
-          })
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to fetch response');
-        }
-
-        const data = await response.json();
-        text = data.text;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch response');
       }
+
+      const data = await response.json();
+      text = data.text;
 
       setMessages((prev) => {
         let found = false;
