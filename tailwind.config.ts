@@ -47,7 +47,9 @@ export default {
 				},
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					foreground: 'hsl(var(--accent-foreground))',
+					green: '#00ff88',
+					cyan: '#00ffff',
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
@@ -67,9 +69,7 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				'accent-green': '#00ff88',
-				'accent-cyan': '#00ffff',
-			},
+				},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
