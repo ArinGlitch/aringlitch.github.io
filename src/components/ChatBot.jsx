@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import ReactMarkdown from 'react-markdown';
 import { MessageCircle, X, Send, Loader2, Sparkles, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 
@@ -70,15 +70,11 @@ const ChatBot = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const scrollAreaRef = useRef(null);
-  const messagesEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
-    scrollToBottom();
+    const el = scrollContainerRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
   const createId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -246,7 +242,10 @@ const ChatBot = () => {
               </CardHeader>
 
               <CardContent className="p-0 h-[400px]">
-                <ScrollArea className="h-full p-4" ref={scrollAreaRef}>
+                <div
+                  ref={scrollContainerRef}
+                  className="h-full overflow-y-auto p-4"
+                >
                   <div className="space-y-4">
                     {messages.map((message) => (
                       <motion.div
@@ -268,11 +267,15 @@ const ChatBot = () => {
 
                           <div
                             className={`p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${message.role === 'user'
-                              ? 'bg-gradient-to-r from-accent-green to-accent-cyan text-black rounded-br-none font-medium'
+                              ? 'rounded-br-none font-medium'
                               : message.isError
                                 ? 'bg-red-500/10 text-red-200 border border-red-500/20 rounded-bl-none'
                                 : 'bg-white/10 text-gray-100 border border-white/5 rounded-bl-none backdrop-blur-sm'
                               }`}
+                            style={message.role === 'user' ? {
+                              background: 'linear-gradient(to right, #00ff88, #00ffff)',
+                              color: '#000',
+                            } : undefined}
                           >
                             {message.isTyping ? (
                               <div className="flex items-center gap-1.5">
@@ -280,17 +283,30 @@ const ChatBot = () => {
                                 <div className="w-1.5 h-1.5 bg-accent-cyan rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                                 <div className="w-1.5 h-1.5 bg-accent-green rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                               </div>
-                            ) : (
+                            ) : message.role === 'user' ? (
                               message.content
+                            ) : (
+                              <ReactMarkdown
+                                components={{
+                                  p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                                  strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                                  ul: ({ children }) => <ul className="list-disc pl-4 mb-2 last:mb-0 space-y-1">{children}</ul>,
+                                  ol: ({ children }) => <ol className="list-decimal pl-4 mb-2 last:mb-0 space-y-1">{children}</ol>,
+                                  li: ({ children }) => <li>{children}</li>,
+                                  pre: ({ children }) => <pre className="bg-white/10 p-2 rounded my-2 overflow-x-auto text-xs [&>code]:bg-transparent [&>code]:p-0">{children}</pre>,
+                                  code: ({ children }) => <code className="bg-white/10 px-1 py-0.5 rounded text-accent-green text-xs">{children}</code>,
+                                  a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent-cyan underline">{children}</a>,
+                                }}
+                              >
+                                {message.content}
+                              </ReactMarkdown>
                             )}
                           </div>
                         </div>
                       </motion.div>
                     ))}
-
-                    <div ref={messagesEndRef} />
                   </div>
-                </ScrollArea>
+                </div>
               </CardContent>
 
               <CardFooter className="p-3 bg-black/20 border-t border-white/5">
