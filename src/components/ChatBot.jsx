@@ -212,8 +212,8 @@ const ChatBot = () => {
             transition={{ duration: 0.2 }}
             className="fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)]"
           >
-            <Card className="border-accent-green/30 shadow-2xl bg-black/80 backdrop-blur-md overflow-hidden">
-              <CardHeader className="p-4 border-b border-white/10 bg-gradient-to-r from-accent-green/10 to-accent-cyan/10">
+            <Card className="border-accent-green/50 shadow-2xl bg-black/95 backdrop-blur-xl overflow-hidden">
+              <CardHeader className="p-4 border-b border-white/10 bg-gradient-to-r from-accent-green/20 to-accent-cyan/20">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-accent-green to-accent-cyan flex items-center justify-center shadow-lg shadow-accent-green/20">
@@ -338,8 +338,8 @@ const ChatBot = () => {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className={`fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-colors duration-300 ${isOpen
-          ? 'bg-gray-800 text-white'
+        className={`fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 ${isOpen
+          ? 'bg-gradient-to-r from-red-500 to-pink-600 text-white rotate-90'
           : 'bg-gradient-to-r from-accent-green to-accent-cyan text-white animate-pulse-scale'
           }`}
       >
