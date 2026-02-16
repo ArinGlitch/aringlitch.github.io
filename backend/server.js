@@ -39,7 +39,7 @@ app.post('/api/chat', async (req, res) => {
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: modelName || 'gemini-flash-latest' });
+    const model = genAI.getGenerativeModel({ model: modelName || 'gemini-2.5-flash-lite' });
 
     const chat = model.startChat({
       history: Array.isArray(history) ? history : [],

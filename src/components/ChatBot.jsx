@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { MessageCircle, X, Send, Loader2, Sparkles, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -116,37 +117,56 @@ const ChatBot = () => {
         ...buildHistory(messages),
       ];
 
-      // Server-side call only
       const apiBase = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') || '';
-      const endpoint = apiBase ? `${apiBase}/api/chat` : '/api/chat';
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: trimmed,
-          history: chatHistoryWithContext, // Send full history including context
-          modelName: 'gemini-flash-latest'
-        })
-      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch response');
+      if (apiBase) {
+        // Use backend proxy if configured
+        const endpoint = `${apiBase}/api/chat`;
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: trimmed,
+            history: chatHistoryWithContext,
+            modelName: 'gemini-2.5-flash-lite'
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch response');
+        }
+
+        const data = await response.json();
+        text = data.text;
+      } else {
+        // Call Gemini API directly from client
+        const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+        if (!apiKey) throw new Error('API key not configured');
+
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
+        const chat = model.startChat({
+          history: chatHistoryWithContext,
+          generationConfig: {
+            maxOutputTokens: 500,
+            temperature: 0.7,
+          },
+        });
+        const result = await chat.sendMessage(trimmed);
+        text = result.response.text();
       }
-
-      const data = await response.json();
-      text = data.text;
 
       setMessages((prev) => {
         let found = false;
         const next = prev.map((msg) => {
           if (msg.id !== pendingId) return msg;
           found = true;
-          return { ...msg, content: text || 'Sorry, I did not receive a response.', isTyping: false };
+          return { ...msg, content: text?.trim() || 'Sorry, I did not receive a response.', isTyping: false };
         });
         return found
           ? next
-          : [...next, { id: createId(), role: 'assistant', content: text || 'Sorry, I did not receive a response.' }];
+          : [...next, { id: createId(), role: 'assistant', content: text?.trim() || 'Sorry, I did not receive a response.' }];
       });
     } catch (error) {
       console.error('Gemini API Error:', error);
@@ -156,8 +176,10 @@ const ChatBot = () => {
         errorMessage = "Error: Invalid API Key. Please contact the administrator.";
       } else if (error.message?.includes('quota')) {
         errorMessage = "Error: API Quota Exceeded. Please try again later.";
+      } else if (error.message?.includes('location is not supported')) {
+        errorMessage = "Sorry, this feature isn't available in your region yet. Please reach out to Aaryan directly via email!";
       } else if (error.message) {
-        errorMessage = `Error: ${error.message.slice(0, 100)}...`; // Truncate long errors
+        errorMessage = `Error: ${error.message.slice(0, 100)}...`;
       }
 
       setMessages((prev) => {
