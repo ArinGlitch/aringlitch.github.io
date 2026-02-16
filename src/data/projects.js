@@ -34,7 +34,7 @@ export const projects = [
     ],
     skills: ["Node.js", "Express.js", "React.js", "TypeScript", "Three.js", "SQLite", "AI Integration", "Software Design Patterns"],
     images: ["/assets/projects/knowledge-nexus.jpg"],
-    github: null,
+    github: "https://github.com/KshitijKaria/knowledge-nexus",
     demo: null
   },
   {
