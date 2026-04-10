@@ -42,7 +42,7 @@ const Hero = () => {
         <div className="max-w-3xl mx-auto mb-12 text-lg leading-relaxed text-gray-300">
           <p>
             I build software that works at every level of the stack—from kernel modules and concurrent file systems to full-stack web apps with real-time 3D visualization. 
-            Currently a second-year Computer Science Specialist at UofT, I've shipped production code at Capgemini, built ML pipelines at SelectAI, and now architect financial simulations at Rotman. 
+            Currently a third-year Computer Science Specialist at UofT, I've shipped production code at Capgemini, built ML pipelines at SelectAI, and now architect financial simulations at Rotman. 
             I thrive on solving hard problems: thread synchronization, memory management, and turning complex requirements into clean, maintainable systems.
           </p>
         </div>
