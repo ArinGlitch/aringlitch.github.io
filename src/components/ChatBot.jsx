@@ -62,6 +62,15 @@ const ChatBot = () => {
     return () => window.removeEventListener('open-chatbot', open);
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen]);
+
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
@@ -169,7 +178,9 @@ const ChatBot = () => {
       console.error('Gemini API Error:', error);
       let errorMessage = "Sorry, I encountered an error. Please try again later.";
 
-      if (error.message?.includes('API key not valid')) {
+      if (error.message?.includes('Error fetching from') || error.message?.includes('Failed to fetch')) {
+        errorMessage = "Couldn't reach the AI service — this is usually an ad blocker or strict privacy setting blocking the request. Try disabling it for this site, or just email Aaryan directly!";
+      } else if (error.message?.includes('API key not valid')) {
         errorMessage = "Error: Invalid API Key. Please contact the administrator.";
       } else if (error.message?.includes('quota')) {
         errorMessage = "Error: API Quota Exceeded. Please try again later.";
@@ -202,22 +213,33 @@ const ChatBot = () => {
     }
   };
 
-  const panelClip = 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))';
-
   return (
     <>
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] drop-shadow-[0_0_24px_rgba(0,255,136,0.25)]"
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="drawer"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'tween', duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+            className="fixed inset-y-0 right-0 z-50 w-full sm:w-[420px] h-[100dvh]"
           >
             <div
-              className="border border-accent-green/50 bg-black/95 backdrop-blur-xl overflow-hidden flex flex-col"
-              style={{ clipPath: panelClip }}
+              className="h-full border-l border-accent-green/40 bg-black/95 backdrop-blur-xl overflow-hidden flex flex-col shadow-[-12px_0_40px_-12px_rgba(0,255,136,0.35)]"
             >
               {/* Header */}
               <div className="p-4 border-b border-accent-green/25 bg-accent-green/5">
@@ -251,8 +273,8 @@ const ChatBot = () => {
               </div>
 
               {/* Messages */}
-              <div className="h-[400px]">
-                <div ref={scrollContainerRef} className="h-full overflow-y-auto p-4">
+              <div className="flex-1 min-h-0">
+                <div ref={scrollContainerRef} className="h-full overflow-y-auto overflow-x-hidden p-4">
                   <div className="space-y-4">
                     {messages.map((message) => (
                       <motion.div
@@ -263,7 +285,7 @@ const ChatBot = () => {
                         className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                       >
                         <div
-                          className={`max-w-[85%] p-3 text-sm leading-relaxed ${message.role === 'user'
+                          className={`max-w-[85%] min-w-0 p-3 text-sm leading-relaxed break-words ${message.role === 'user'
                             ? 'bg-accent-green text-black font-medium'
                             : message.isError
                               ? 'bg-red-500/10 text-red-200 border border-red-500/30'
@@ -334,42 +356,25 @@ const ChatBot = () => {
         )}
       </AnimatePresence>
 
-      {/* Launcher */}
-      <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        aria-label={isOpen ? 'Close AI agent' : 'Open AI agent'}
-        className={`fixed bottom-6 right-6 z-[9999] w-14 h-14 flex items-center justify-center transition-all duration-300 border ${isOpen
-          ? 'bg-black border-accent-green text-accent-green drop-shadow-[0_0_10px_rgba(0,255,136,0.5)]'
-          : 'bg-accent-green border-accent-green text-black drop-shadow-[0_0_14px_rgba(0,255,136,0.6)]'
-          }`}
-        style={{ clipPath: 'polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%)' }}
-      >
-        <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.div
-              key="close"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <X className="w-6 h-6" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="chat"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Terminal className="w-6 h-6" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.button>
+      {/* Launcher - hidden while the drawer is open */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.button
+            key="launcher"
+            onClick={() => setIsOpen(true)}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Open AI agent"
+            className="fixed bottom-6 right-6 z-[60] w-14 h-14 flex items-center justify-center border bg-accent-green border-accent-green text-black drop-shadow-[0_0_14px_rgba(0,255,136,0.6)]"
+            style={{ clipPath: 'polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%)' }}
+          >
+            <Terminal className="w-6 h-6" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </>
   );
 };
