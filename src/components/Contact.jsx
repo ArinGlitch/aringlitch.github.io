@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Reveal from './motion/Reveal';
+import SectionHeader from './motion/SectionHeader';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -58,94 +60,92 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="section-padding bg-black">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl md:text-5xl font-bold mb-6">
-          Get In <span className="text-accent-green">Touch</span>
-        </h2>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Let's discuss opportunities, collaborations, or just have a conversation about technology
-        </p>
-      </div>
-      
-      <div className="max-w-2xl mx-auto">
-        {submitStatus === 'success' && (
-          <div className="mb-6 p-4 bg-accent-green/10 border border-accent-green rounded-lg text-accent-green text-center">
-            Thank you for your message! I'll get back to you soon.
-          </div>
-        )}
-        {submitStatus === 'error' && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500 rounded-lg text-red-400 text-center">
-            Something went wrong. Please try again or email me directly.
-          </div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-muted border border-border rounded-lg 
-                         focus:border-accent-green focus:ring-1 focus:ring-accent-green 
-                         transition-colors duration-300 text-white placeholder-gray-400"
-                placeholder="Your name"
-              />
+    <section id="contact" className="relative bg-black tron-dots">
+      <div className="section-padding">
+        <SectionHeader
+          index="04"
+          kicker="Open Channel"
+          title="Get In Touch"
+          subtitle="Let's discuss opportunities, collaborations, or just have a conversation about technology"
+        />
+
+        <div className="max-w-2xl mx-auto">
+          {submitStatus === 'success' && (
+            <div className="mb-6 p-4 bg-accent-green/10 border border-accent-green font-mono text-sm text-accent-green text-center"
+                 style={{ boxShadow: '0 0 16px -4px rgba(0, 255, 136, 0.5)' }}>
+              [OK] Message transmitted. I'll get back to you soon.
             </div>
-            
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-muted border border-border rounded-lg 
-                         focus:border-accent-green focus:ring-1 focus:ring-accent-green 
-                         transition-colors duration-300 text-white placeholder-gray-400"
-                placeholder="your.email@example.com"
-              />
+          )}
+          {submitStatus === 'error' && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500 font-mono text-sm text-red-400 text-center">
+              [ERR] Transmission failed. Please try again or email me directly.
             </div>
-          </div>
-          
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-              rows={6}
-              className="w-full px-4 py-3 bg-muted border border-border rounded-lg 
-                       focus:border-accent-green focus:ring-1 focus:ring-accent-green 
-                       transition-colors duration-300 text-white placeholder-gray-400 resize-none"
-              placeholder="Tell me about your project or opportunity..."
-            />
-          </div>
-          
-          <div className="text-center">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn-primary text-lg px-8 py-4 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? 'Sending...' : 'Send Message'}
-            </button>
-          </div>
-        </form>
+          )}
+
+          <Reveal>
+            <form onSubmit={handleSubmit} className="tron-panel p-8 space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block font-mono text-xs uppercase tracking-widest text-accent-green/80 mb-2">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="tron-input"
+                    placeholder="Your name"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block font-mono text-xs uppercase tracking-widest text-accent-green/80 mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="tron-input"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block font-mono text-xs uppercase tracking-widest text-accent-green/80 mb-2">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows={6}
+                  className="tron-input resize-none"
+                  placeholder="Tell me about your project or opportunity..."
+                />
+              </div>
+
+              <div className="text-center">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? 'Transmitting...' : 'Send Message'}
+                </button>
+              </div>
+            </form>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

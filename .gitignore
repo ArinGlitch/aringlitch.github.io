@@ -23,3 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# graphify local artifacts (regenerable, not needed for deploy)
+graphify-out/cache/
+graphify-out/obsidian/
+graphify-out/.obsidian/
+graphify-out/.graphify_python

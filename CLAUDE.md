@@ -44,12 +44,12 @@ for u, v in G.edges():
 " SEARCH_TERMS_HERE
 ```
 
-The graph has 175 nodes and 199 edges across 26 communities. Key clusters:
-- **Portfolio Page Sections**: Hero, About, Contact, Education, Experience, Footer
-- **App Routing & Navigation**: App, Projects, ProjectDetail, NotFound
-- **ChatBot & Card UI**: ChatBot component with backend API
-- **Form & Input Components**: shadcn/ui component library (do not edit directly)
+The graph has 203 nodes and 232 edges across 25 communities. Key clusters:
+- **Portfolio Sections & Motion**: Hero, About, Contact, Experience, Footer, Navbar, ChatBot, and motion primitives (Reveal, DecryptText, SectionHeader)
+- **App Routing & Pages**: App, ProjectDetail, NotFound
+- **shadcn/ui Component Library**: do not edit directly
 - **Systems Programming Projects**: EXT2 filesystem, VM simulator, Syscall interceptor
+- **Architecture & Conventions**: deployment, path aliases, styling rationale
 - **Personal Identity & Branding**: Profile photo, UofT logo, AG icons
 
 The full audit report is at `graphify-out/GRAPH_REPORT.md`. To rebuild after code changes: `/graphify . --update`

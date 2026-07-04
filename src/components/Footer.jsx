@@ -10,20 +10,17 @@ const Footer = () => {
     {
       name: 'GitHub',
       icon: Github,
-      url: 'https://github.com/aringlitch',
-      color: 'hover:text-accent-green'
+      url: 'https://github.com/aringlitch'
     },
     {
       name: 'LinkedIn',
       icon: Linkedin,
-      url: 'https://www.linkedin.com/in/aaryan-gupta7/',
-      color: 'hover:text-accent-cyan'
+      url: 'https://www.linkedin.com/in/aaryan-gupta7/'
     },
     {
       name: 'Email',
       icon: Mail,
-      url: 'mailto:aaryan.gupta@mail.utoronto.ca',
-      color: 'hover:text-accent-green'
+      url: 'mailto:aaryan.gupta@mail.utoronto.ca'
     }
   ];
 
@@ -35,7 +32,11 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-black border-t border-border">
+    <footer className="bg-black border-t border-accent-green/20 relative">
+      {/* Neon top edge */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-1/2 bg-accent-green/60"
+           style={{ boxShadow: '0 0 12px 1px rgba(0, 255, 136, 0.5)' }} />
+
       <div className="section-padding py-12">
         <div className="text-center space-y-8">
           <div className="flex flex-wrap justify-center gap-8">
@@ -43,13 +44,13 @@ const Footer = () => {
               <button
                 key={link.name}
                 onClick={link.action}
-                className="text-muted-foreground hover:text-accent-cyan transition-colors duration-300 font-medium"
+                className="font-mono text-sm uppercase tracking-widest text-muted-foreground hover:text-accent-green transition-colors duration-300"
               >
                 {link.name}
               </button>
             ))}
           </div>
-          
+
           <div className="flex justify-center space-x-6">
             {socialLinks.map((social) => {
               const IconComponent = social.icon;
@@ -59,7 +60,7 @@ const Footer = () => {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`text-muted-foreground ${social.color} transition-colors duration-300 p-2`}
+                  className="text-muted-foreground hover:text-accent-green transition-all duration-300 p-2 hover:drop-shadow-[0_0_8px_rgba(0,255,136,0.8)]"
                   aria-label={social.name}
                 >
                   <IconComponent size={24} />
@@ -67,10 +68,10 @@ const Footer = () => {
               );
             })}
           </div>
-          
-          <div className="pt-8 border-t border-border">
-            <p className="text-muted-foreground text-sm">
-              © 2024 Aaryan Gupta. Built with passion and precision.
+
+          <div className="pt-8 border-t border-accent-green/10">
+            <p className="font-mono text-xs text-muted-foreground tracking-wider">
+              © 2026 AARYAN GUPTA <span className="text-accent-green">//</span> BUILT WITH PASSION AND PRECISION
             </p>
           </div>
         </div>

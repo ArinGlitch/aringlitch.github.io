@@ -1,9 +1,9 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
-import About from '../components/About';
-import Education from '../components/Education';
-import Projects from '../components/Projects';
 import Experience from '../components/Experience';
+import Projects from '../components/Projects';
+import About from '../components/About';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 import ChatBot from '../components/ChatBot';
@@ -11,11 +11,11 @@ import ChatBot from '../components/ChatBot';
 const Index = () => {
   return (
     <main className="bg-black text-white">
+      <Navbar />
       <Hero />
-      <About />
-      <Education />
-      <Projects />
       <Experience />
+      <Projects />
+      <About />
       <Contact />
       <Footer />
       <ChatBot />
