@@ -64,7 +64,7 @@ const About = () => {
                       BSc Computer Science (Specialist) · Expected Apr 2028
                     </p>
                     <p className="font-mono text-sm text-accent-green mt-1">
-                      GPA: 3.91 / 4.00
+                      GPA: 3.92 / 4.00
                     </p>
                   </div>
                 </div>
